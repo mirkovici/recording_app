@@ -8,7 +8,7 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
-  (e: "delete"): void;
+  (e: "remove"): void;
   (e: "save", value: string, index: number): void;
 }>();
 
@@ -74,7 +74,6 @@ async function record() {
 const play = () => {
   let player = new window.Audio();
   player.src = window.URL.createObjectURL(blob?.value);
-  console.log(player);
   player.play();
 };
 
@@ -92,7 +91,7 @@ const save = (blob: any, recordIndex: any) => {
   <button color="primary" @click="save(blob, recordIndex)" :disabled="cantSave">
     Save
   </button>
-  <div @click="emit(`delete`)" class="record_list_item_close">&#215;</div>
+  <div @click="emit(`remove`)" class="record_list_item_close">&#215;</div>
 </template>
 
 <style scoped>
