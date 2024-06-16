@@ -3,8 +3,10 @@ const ffmpeg = require("fluent-ffmpeg");
 const fs = require("fs");
 ffmpeg.setFfmpegPath(ffmpegPath);
 
+const directory = "./utils/recordings";
+
 function mergeAudioFiles(inputFiles, callback) {
-  outputAudio = `./utils/recordings/output_${new Date().getTime()}.mp3`;
+  outputAudio = `${directory}/output_${new Date().getTime()}.mp3`;
   if (inputFiles.length < 2) {
     console.error("You need at least two input audio files to merge");
     return;
@@ -43,9 +45,12 @@ function mergeAudioFiles(inputFiles, callback) {
 const generateFiles = async (files, callback) => {
   let paths = [];
   try {
+    if (!fs.existsSync(`${directory}`)) {
+      fs.mkdirSync(`${directory}`);
+    }
     for (let [key, value] of Object.entries(files)) {
       const audioFileData = fs.readFileSync(value?.path);
-      let path = `./utils/recordings/${key}_${new Date().getTime()}.mp3`;
+      let path = `${directory}/${key}_${new Date().getTime()}.mp3`;
       fs.writeFileSync(path, audioFileData);
       paths.push(path);
     }
