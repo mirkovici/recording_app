@@ -26,10 +26,10 @@ function mergeAudioFiles(inputFiles, callback) {
     .complexFilter(filter)
     .outputOptions(["-map", "[a]", "-ac", "2"])
     .on("end", function () {
-      let formattedOutputAudio = outputAudio.substring(1);
-      formattedOutputAudio =
-        "/api/output/" + formattedOutputAudio?.split("/")?.[3];
-      callback({ status: "success", output: formattedOutputAudio });
+      let formattedOutputAudioPath = outputAudio.substring(1);
+      formattedOutputAudioPath =
+        "/api/output/" + formattedOutputAudioPath?.split("/")?.[3];
+      callback({ status: "success", output: formattedOutputAudioPath });
       console.log("Files have been merged successfully");
     })
     .on("error", function (err) {
