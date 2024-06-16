@@ -71,8 +71,10 @@ const remove = (index: number) => {
 
 <template>
   <div class="greetings">
-    <button @click="add()">Add Record</button>
-    <button @click="combine()">Combine Records</button>
+    <div class="record_list_actions">
+      <button @click="add()">Add Record</button>
+      <button @click="combine()">Combine Records</button>
+    </div>
     <div class="record_list_container">
       <div class="record_list_item" v-for="(record, index) in recordList">
         <RecordAudio
@@ -118,6 +120,12 @@ h3 {
   flex-direction: column;
   align-items: left;
   height: 300px;
+}
+
+.record_list_actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .record_list_item {
