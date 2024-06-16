@@ -10,15 +10,26 @@ const recordList: Ref<IRecord[]> = ref([
   { title: "Record 3", blob: null },
 ]);
 
+const outputFile = ref(null);
+
 const combine = async () => {
   const formData = new FormData();
-  recordList.value.forEach((record) => {
+  let indexForRemoval: number[] = [];
+  recordList.value.forEach((record, index) => {
     if (record.blob !== null) {
       formData.append(
         `${record.title.toLocaleLowerCase().replace(" ", "")}`,
         record.blob
       );
+    } else {
+      indexForRemoval.push(index);
     }
+  });
+
+  recordList.value.sort((a: any, b: any) => b - a);
+
+  indexForRemoval.forEach((index: number) => {
+    recordList.value.splice(index, 1);
   });
 
   axios({
@@ -28,7 +39,7 @@ const combine = async () => {
     headers: { "Content-Type": "multipart/form-data" },
   })
     .then((res: any) => {
-      console.log(res);
+      outputFile.value = res.data.output;
     })
     .catch((res: any) => {
       console.log(res);
@@ -38,7 +49,6 @@ const combine = async () => {
 const save = (blob: any, index: any) => {
   // @ts-ignore
   recordList.value[index].blob = blob;
-  console.log(recordList.value);
 };
 
 const add = () => {
@@ -72,6 +82,15 @@ const remove = (index: number) => {
           @remove="remove(index)"
           @save="save"
         />
+      </div>
+      <div class="record_list_output" v-if="outputFile">
+        <audio controls>
+          <source
+            :src="'http://localhost:3000' + outputFile"
+            type="audio/mpeg"
+          />
+          Your browser does not support the audio tag.
+        </audio>
       </div>
     </div>
   </div>
@@ -112,6 +131,10 @@ h3 {
   margin-top: 5px;
   line-height: 20px;
   position: relative;
+}
+
+.record_list_output {
+  margin-top: 20px;
 }
 
 .record_list_item_close {

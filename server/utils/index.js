@@ -28,7 +28,10 @@ function mergeAudioFiles(inputFiles, callback) {
     .complexFilter(filter)
     .outputOptions(["-map", "[a]", "-ac", "2"])
     .on("end", function () {
-      callback(outputAudio);
+      let formattedOutputAudio = outputAudio.substring(1);
+      formattedOutputAudio =
+        "/api/output/" + formattedOutputAudio?.split("/")?.[3];
+      callback(formattedOutputAudio);
       console.log("Files have been merged successfully");
     })
     .on("error", function (err) {
@@ -45,8 +48,8 @@ const generateFiles = async (files, callback) => {
       let path = `./utils/recordings/${key}_${new Date().getTime()}.mp3`;
       fs.writeFileSync(path, audioFileData);
       paths.push(path);
-      mergeAudioFiles(paths, callback);
     }
+    mergeAudioFiles(paths, callback);
   } catch (error) {
     console.error("Error:", error);
   }

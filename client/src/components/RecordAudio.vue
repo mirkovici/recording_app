@@ -35,7 +35,7 @@ async function record() {
     return;
   }
 
-  var constraints = {
+  const constraints = {
     audio: true,
     video: false,
   };
@@ -61,6 +61,7 @@ async function record() {
   recorderTmp.onComplete = (_: any, blobValue: any) => {
     recordingStatus.value = "Record Sound";
     blob.value = blobValue;
+    emit(`save`, blob.value, recordIndex.value);
   };
 
   recorderTmp.startRecording();
@@ -76,10 +77,6 @@ const play = () => {
   player.src = window.URL.createObjectURL(blob?.value);
   player.play();
 };
-
-const save = (blob: any, recordIndex: any) => {
-  emit(`save`, blob, recordIndex);
-};
 </script>
 
 <template>
@@ -88,9 +85,6 @@ const save = (blob: any, recordIndex: any) => {
     {{ recordingStatus }}
   </button>
   <button class="mr-4" :disabled="!blob" @click="play">Play Sound</button>
-  <button color="primary" @click="save(blob, recordIndex)" :disabled="cantSave">
-    Save
-  </button>
   <div @click="emit(`remove`)" class="record_list_item_close">&#215;</div>
 </template>
 

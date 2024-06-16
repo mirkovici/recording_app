@@ -26,6 +26,8 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: err.message });
 });
 
+app.use("/api/output", express.static("utils/recordings"));
+
 const port = process.env.PORT || 3000;
 
 // Start the server
