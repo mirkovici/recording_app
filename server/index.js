@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const formidableMiddleware = require("express-formidable");
-
+const { generateFiles } = require("./utils");
 const app = express();
 
 app.use(express.json());
@@ -13,8 +13,10 @@ app.options("*", cors());
 
 app.post("/v1/combine", async (req, res, next) => {
   try {
-    console.log(req.fields); // contains non-file fields
-    console.log(req.files); // contains files
+    const { files } = req;
+    generateFiles(files, (outputAudio) => {
+      res.status(200).json({ message: "success", output: outputAudio });
+    });
   } catch (error) {
     next(error);
   }
