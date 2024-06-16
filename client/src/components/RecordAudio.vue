@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { ref } from "vue";
 import type { IRecord } from "@/types";
 
 const props = defineProps<{
@@ -17,11 +17,6 @@ const recording = ref(false);
 const recorder = ref<any>(null);
 const blob = ref<any>(null);
 const stream = ref<any>(null);
-const cantSave = computed(() => {
-  //check title and recording
-  if (!blob.value) return true;
-  return false;
-});
 
 const recordTitle = ref(props.record?.title);
 const recordIndex = ref(props.index);
@@ -42,8 +37,8 @@ async function record() {
 
   stream.value = await navigator.mediaDevices.getUserMedia(constraints);
 
-  var audioContext = new AudioContext();
-  var input = audioContext.createMediaStreamSource(stream.value);
+  const audioContext = new AudioContext();
+  const input = audioContext.createMediaStreamSource(stream.value);
 
   let configs = {
     workerDir: "/web-audio-recorder/",

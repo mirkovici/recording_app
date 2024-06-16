@@ -42,7 +42,7 @@ const combine = async () => {
       outputFile.value = res.data.output;
     })
     .catch((res: any) => {
-      console.log(res);
+      alert(`${JSON.stringify(res)}Something went wrong`);
     });
 };
 
