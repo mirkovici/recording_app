@@ -67,6 +67,11 @@ const add = () => {
 const remove = (index: number) => {
   recordList.value.splice(index, 1);
 };
+
+const clear = () => {
+  recordList.value = [];
+  outputFile.value = null;
+};
 </script>
 
 <template>
@@ -74,6 +79,7 @@ const remove = (index: number) => {
     <div class="record_list_actions">
       <button @click="add()">Add Record</button>
       <button @click="combine()">Combine Records</button>
+      <button @click="clear()">Clear all</button>
     </div>
     <div class="record_list_container">
       <div class="record_list_item" v-for="(record, index) in recordList">
@@ -86,7 +92,7 @@ const remove = (index: number) => {
         />
       </div>
       <div class="record_list_output" v-if="outputFile">
-        <audio controls>
+        <audio :key="outputFile" controls>
           <source
             :src="'http://localhost:3000' + outputFile"
             type="audio/mpeg"

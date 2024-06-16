@@ -6,11 +6,7 @@ ffmpeg.setFfmpegPath(ffmpegPath);
 const directory = "./utils/recordings";
 
 function mergeAudioFiles(inputFiles, callback) {
-  outputAudio = `${directory}/output_${new Date().getTime()}.mp3`;
-  if (inputFiles.length < 2) {
-    console.error("You need at least two input audio files to merge");
-    return;
-  }
+  let outputAudio = `${directory}/output_${new Date().getTime()}.mp3`;
 
   const command = ffmpeg();
 
@@ -33,10 +29,11 @@ function mergeAudioFiles(inputFiles, callback) {
       let formattedOutputAudio = outputAudio.substring(1);
       formattedOutputAudio =
         "/api/output/" + formattedOutputAudio?.split("/")?.[3];
-      callback(formattedOutputAudio);
+      callback({ status: "success", output: formattedOutputAudio });
       console.log("Files have been merged successfully");
     })
     .on("error", function (err) {
+      callback({ status: "error", msg: err.message });
       console.log("An error occurred: " + err.message);
     })
     .save(outputAudio);
@@ -55,8 +52,9 @@ const generateFiles = async (files, callback) => {
       paths.push(path);
     }
     mergeAudioFiles(paths, callback);
-  } catch (error) {
-    console.error("Error:", error);
+  } catch (err) {
+    callback({ status: "error", msg: err.message });
+    console.error("Error:", err);
   }
 };
 
